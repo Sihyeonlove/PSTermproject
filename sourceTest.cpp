@@ -68,7 +68,7 @@ typedef struct student {
 } Student;
 int firstTest = 3;
 char* numToID(int num) {
-    // ¸Þ¸ð¸® µ¿Àû ÇÒ´ç
+    // ë©”ëª¨ë¦¬ ë™ì  í• ë‹¹
     char* fstr = (char*)malloc(4 * sizeof(char));
     if (fstr == NULL) {
         printf("Memory allocation failed.\n");
@@ -78,6 +78,18 @@ char* numToID(int num) {
 
     return fstr;
 }
+void fileWrite(Student * studentpointer) {
+    FILE* outputF;
+    outputF = fopen("student_output.txt", "w");
+
+    Student* ptr = studentpointer;
+    for (int i = 0; ptr != NULL; i++) {
+        fprintf(outputF, "%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+        ptr = ptr->next;
+    }
+    fclose(outputF);
+}
+
 void loading(int time) {
     char loadstr[100] = "Loading...";
     for (int i = 0; loadstr[i] != '\0'; i++) {
@@ -160,7 +172,7 @@ void returnM(int time) {
     }
 }
 int main() {
-    //Student* student = (Student*)malloc(firstTest * sizeof(Student));  // ÃÊ±â Å©±â ÇÒ´ç
+    //Student* student = (Student*)malloc(firstTest * sizeof(Student));  // ì´ˆê¸° í¬ê¸° í• ë‹¹
     int arrSize = 0;
     //student student;
     FILE* input;
@@ -222,8 +234,18 @@ int main() {
     }
         sort(student);
     Student* current = student;
+    fclose(input);
+    fclose(output);
+    fileWrite(student);
     for (;;) {
+        //output = fopen("output.txt", "w");
         Clear();
+        Student* ptrww = student;
+        for (int i = 0; ptrww != NULL; i++) {
+            //printf("%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+            fprintf(output, "%s,%s,%d,%s,%.2f\n", numToID(ptrww->id), ptrww->name, ptrww->age, ptrww->major, ptrww->grade);
+            ptrww = ptrww->next;
+        }
         printf("--------------------------------\nStudent Record Management System\n\n-Select the menu.(You can type the number of menu.)\n1. Addition\n2. Modification\n3. Deletion\n4. Display\n5. Search by ID\nElse. Exit the program.");
         char ch = _getch();
         if (ch == '1') {
@@ -392,19 +414,16 @@ int main() {
                 ch = _getch();
                 returnM(2);
             }
+            
         }
         else {
             Clear();
-            Student* ptr = student;
-            for (int i = 0; ptr != NULL; i++) {
-                //printf("%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
-                fprintf(output, "%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
-                ptr = ptr->next;
-            }
+            //Insert function
                 //for (;;);
             printf("Thank you for using our service.");
             break;
         }
+        fileWrite(student);
     }
     //current = student;
     while (current != NULL) {
@@ -412,8 +431,7 @@ int main() {
         current = current->next;
         free(temp);
     }
-    fclose(input);
-    fclose(output);
+
     //free(student);
     return 0;
 }
