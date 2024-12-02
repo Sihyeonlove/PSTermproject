@@ -68,7 +68,6 @@ typedef struct student {
 } Student;
 int firstTest = 3;
 char* numToID(int num) {
-    // 메모리 동적 할당
     char* fstr = (char*)malloc(4 * sizeof(char));
     if (fstr == NULL) {
         printf("Memory allocation failed.\n");
@@ -88,14 +87,6 @@ void fileWrite(Student * studentpointer) {
         ptr = ptr->next;
     }
     fclose(outputF);
-}
-
-void loading(int time) {
-    char loadstr[100] = "Loading...";
-    for (int i = 0; loadstr[i] != '\0'; i++) {
-        printf("%c", loadstr[i]);
-    Sleep(time);
-    }
 }
 
 Student* createStudent(int id, char* name, int age, char* major, float grade) {
@@ -163,21 +154,13 @@ void sort(Student* st) {
         }
     }
 }
-
-void returnM(int time) {
-    for (int i = time; i > 0; i--) {
-        Clear();
-        printf("Saved ! Return to the main menu in %d seconds...", i);
-        Sleep(SEC);
-    }
-}
 int main() {
-    //Student* student = (Student*)malloc(firstTest * sizeof(Student));  // 초기 크기 할당
+    //Student* student = (Student*)malloc(firstTest * sizeof(Student));
     int arrSize = 0;
-    //student student;
+    
     FILE* input;
     FILE* output;
-    //input = fopen("student_input", "r");
+    
     output = fopen("student_output.txt", "r+");
     if (output != NULL) {
         
@@ -206,17 +189,6 @@ int main() {
     }
     Student* student = NULL;
     for (int i = 0;; i++) {
-    /*
-        if (arrSize >= firstTest) {
-            firstTest += 1;
-            Student* new_students = (Student*)realloc(student, firstTest * sizeof(Student));
-            student = new_students;
-        }
-        if (fscanf(input, "%d,%99[^,],%d,%99[^,],%f\n", &(student[i].id), (student[i].name), &(student[i].age), (student[i].major), &(student[i].grade)) == EOF){
-            break;
-        }
-        arrSize++;
-    */
 
         int id;
         char name[100];
@@ -227,7 +199,7 @@ int main() {
         if (fscanf(input, "%d,%99[^,],%d,%99[^,],%f\n", &id, name, &age, major, &grade) != EOF) {
             addStudent(&student, id, name, age, major, grade);
         }
-        else {
+        else { 
             break;
         }
         arrSize++;
@@ -238,11 +210,11 @@ int main() {
     fclose(output);
     fileWrite(student);
     for (;;) {
-        //output = fopen("output.txt", "w");
+        
         Clear();
         Student* ptrww = student;
         for (int i = 0; ptrww != NULL; i++) {
-            //printf("%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+            //printf("%s,%s,%d,%s,%.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade); // Debugging
             fprintf(output, "%s,%s,%d,%s,%.2f\n", numToID(ptrww->id), ptrww->name, ptrww->age, ptrww->major, ptrww->grade);
             ptrww = ptrww->next;
         }
@@ -279,8 +251,6 @@ int main() {
             addStudent(&tcurrent, temp.id, temp.name, temp.age, temp.major, temp.grade);
             arrSize++;
             sort(student);
-            loading(300);
-            returnM(3);
         }
         else if (ch == '2') {
             Clear();
@@ -297,7 +267,7 @@ int main() {
                     printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
                     ch = _getch();
                     if (ch == 'Y' || ch == 'y') {
-                        //Student temp = { ptr->id, "Emma", 20, "Magic", 0.1,ptr->next};
+                        //Student temp = { ptr->id, "Emma", 20, "Magic", 0.1,ptr->next}; // Debugging
                         printf("Type the student's new information.\nName : ");
                         scanf("%s", ptr->name);
                         printf("Major : ");
@@ -307,11 +277,11 @@ int main() {
                         printf("Grade : ");
                         scanf("%f", &(ptr->grade));
                         sort(student);
-                        returnM(3); break;
+                        
                     }
 
                     else {
-                        returnM(3);
+                        
                         break;
                     }
                 }
@@ -320,7 +290,7 @@ int main() {
             if (!boolFind) {
                 printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                returnM(2);
+                
             }
         }
         else if (ch == '3') {
@@ -341,12 +311,11 @@ int main() {
                     if (ch == 'Y' || ch == 'y') {
                         student = student->next;
                         arrSize--;
-                        returnM(3); break;
+                        break;
                     }
 
                     else {
-                        returnM(3);
-                        break;
+                                                break;
                     }
                 }
                 else if (ptr->next->id == idCom) {
@@ -359,11 +328,11 @@ int main() {
                         ptr->next = ptr->next->next;
                         arrSize--;
                         if(ptr->next != NULL) (ptr->next)->next = NULL;
-                        returnM(3); break;
+                        break;
                     }
 
                     else {
-                        returnM(3);
+                        
                         break;
                     }
                 }
@@ -372,7 +341,7 @@ int main() {
             if (!boolFind) {
                 printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                returnM(2);
+                
             }
         }
         else if (ch == '4') {
@@ -404,7 +373,7 @@ int main() {
                     printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
                     printf("------------------------------------\n\nIf you want return to the menu, type any key.");
                     ch = _getch();
-                    returnM(3); break;
+                    break;
                 }
                    
                 ptr = ptr->next;
@@ -412,14 +381,13 @@ int main() {
             if (!boolFind) {
                 printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                returnM(2);
+                
             }
             
         }
         else {
             Clear();
-            //Insert function
-                //for (;;);
+
             printf("Thank you for using our service.");
             break;
         }
@@ -432,6 +400,6 @@ int main() {
         free(temp);
     }
 
-    //free(student);
+    //free(student); // It isn't malloc now.
     return 0;
 }
