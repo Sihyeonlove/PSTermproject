@@ -272,7 +272,7 @@ int main() {
                 for (int i = 0; ptr != NULL; i++) {
                     if (ptr->id == idCom) {
                         boolFind = 1;
-                        printf("Is this the right student information to delete ?\n------------------------------------\n");
+                        printf("Is this the right student information to edit ?\n------------------------------------\n");
                         printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | GPA : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
                         printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
                         ch = _getch();
@@ -308,6 +308,7 @@ int main() {
                 ch = _getch();
             }
         }
+        /*
         else if (ch == '3') {
 
             Clear();
@@ -344,8 +345,10 @@ int main() {
                         if (ch == 'Y' || ch == 'y') {
                             ptr->next = ptr->next->next;
                             arrSize--;
-                            if (ptr->next != NULL) (ptr->next)->next = NULL;
-                            break;
+                            if (ptr->next != NULL) {
+                                (ptr->next)->next = NULL;
+                                break;
+                            }
                         }
 
                         else {
@@ -366,6 +369,63 @@ int main() {
                 ch = _getch();
             }
         }
+        */
+        else if (ch == '3') {
+            Clear();
+            if (student != NULL) {
+                int idCom;
+                printf("Type the ID of the student you want to delete the information from : ");
+                scanf("%d", &idCom);
+
+                Student* current = student; 
+                Student* previous = NULL;  
+                int boolFind = 0;          
+
+                while (current != NULL) {
+                    if (current->id == idCom) {
+                        boolFind = 1;
+                        printf("Is this the right student information to delete?\n");
+                        printf("------------------------------------\n");
+                        printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | GPA : %.2f\n",
+                            numToID(current->id), current->name, current->age, current->major, current->grade);
+                        printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
+                        ch = _getch();
+
+                        if (ch == 'Y' || ch == 'y') {
+                           
+                            if (previous == NULL) {
+                               
+                                student = current->next;
+                            }
+                            else {
+                                
+                                previous->next = current->next;
+                            }
+                            free(current); 
+                            arrSize--;
+                            printf("\nStudent record deleted successfully!\n");
+                        }
+                        else {
+                            printf("\nDeletion cancelled.\n");
+                        }
+                        break;
+                    }
+                   
+                    previous = current;
+                    current = current->next;
+                }
+
+                if (!boolFind) {
+                    printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+                    ch = _getch();
+                }
+            }
+            else {
+                printf("No data exists to delete!\nIf you want return to the menu, type any key.");
+                ch = _getch();
+            }
+            }
+
         else if (ch == '5') {
             Clear();
             if (student != NULL) {
