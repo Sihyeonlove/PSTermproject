@@ -218,18 +218,20 @@ int main() {
             fprintf(output, "%s,%s,%d,%s,%.2f\n", numToID(ptrww->id), ptrww->name, ptrww->age, ptrww->major, ptrww->grade);
             ptrww = ptrww->next;
         }
-        printf("--------------------------------\nStudent Record Management System\n\n-Select the menu.(You can type the number of menu.)\n1. Addition\n2. Modification\n3. Deletion\n4. Display\n5. Search by ID\nElse. Exit the program.");
+        printf("--------------------------------\nStudent Record Management System\n\n-Select the menu.(You can type the number of menu.)\n1. Addition\n2. Modification\n3. Deletion\n4. Search by ID\n5. Display\nElse. Exit the program.");
         char ch = _getch();
         if (ch == '1') {
             Clear();
             Student* tcurrent = student;
             int idFin = 0;
-            while (tcurrent->next != NULL) {
-                if (idFin < tcurrent->id) {
-                    idFin = tcurrent->id;
+            if (tcurrent != NULL) { // NULLptr Test
+                while (tcurrent->next != NULL) {
+                    if (idFin < tcurrent->id) {
+                        idFin = tcurrent->id;
+                    }
+                    Student* temp = tcurrent;
+                    tcurrent = tcurrent->next;
                 }
-                Student* temp = tcurrent;
-                tcurrent = tcurrent->next;
             }
             //printf("idfinal : %d", idFin + 1);
             Student temp = {(idFin + 1), "Chiara", 21, "CompSci", 4.5, NULL};
@@ -239,7 +241,7 @@ int main() {
             scanf("%s", temp.major);
             printf("Age : ");
             scanf("%d", &(temp.age));
-            printf("Grade : ");
+            printf("GPA : ");
             scanf("%f", &(temp.grade));
             /*
             if (arrSize >= firstTest) {
@@ -248,138 +250,165 @@ int main() {
                 student = new_students;
             }*/
             //student[arrSize] = temp;
-            addStudent(&tcurrent, temp.id, temp.name, temp.age, temp.major, temp.grade);
+            addStudent((student != NULL) ? &tcurrent : &student, temp.id, temp.name, temp.age, temp.major, temp.grade);
             arrSize++;
             sort(student);
         }
         else if (ch == '2') {
             Clear();
-            int idCom;
-            printf("Type the ID of the student you want to edit the information from : ");
-            scanf("%d", &idCom);
-            Student* ptr = student;
-            int boolFind = 0;
-            for (int i = 0; ptr != NULL; i++) {
-                if (ptr->id == idCom) {
-                    boolFind = 1;
-                    printf("Is this the right student information to delete ?\n------------------------------------\n");
-                    printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
-                    printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
-                    ch = _getch();
-                    if (ch == 'Y' || ch == 'y') {
-                        //Student temp = { ptr->id, "Emma", 20, "Magic", 0.1,ptr->next}; // Debugging
-                        printf("Type the student's new information.\nName : ");
-                        scanf("%s", ptr->name);
-                        printf("Major : ");
-                        scanf("%s", ptr->major);
-                        printf("Age : ");
-                        scanf("%d", &(ptr->age));
-                        printf("Grade : ");
-                        scanf("%f", &(ptr->grade));
-                        sort(student);
-                        
-                    }
+            if (student != NULL) {
+                int idCom;
+                printf("Type the ID of the student you want to edit the information from : ");
+                scanf("%d", &idCom);
+                Student* ptr = student;
+                int boolFind = 0;
+                for (int i = 0; ptr != NULL; i++) {
+                    if (ptr->id == idCom) {
+                        boolFind = 1;
+                        printf("Is this the right student information to delete ?\n------------------------------------\n");
+                        printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | GPA : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+                        printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
+                        ch = _getch();
+                        if (ch == 'Y' || ch == 'y') {
+                            //Student temp = { ptr->id, "Emma", 20, "Magic", 0.1,ptr->next}; // Debugging
+                            printf("Type the student's new information.\nName : ");
+                            scanf("%s", ptr->name);
+                            printf("Major : ");
+                            scanf("%s", ptr->major);
+                            printf("Age : ");
+                            scanf("%d", &(ptr->age));
+                            printf("Grade : ");
+                            scanf("%f", &(ptr->grade));
+                            sort(student);
 
-                    else {
-                        
-                        break;
+                        }
+
+                        else {
+
+                            break;
+                        }
                     }
+                    ptr = ptr->next;
                 }
-                ptr = ptr->next;
+                if (!boolFind) {
+                    printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+                    ch = _getch();
+
+                }
             }
-            if (!boolFind) {
-                printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+            else {
+                printf("No data exists to delete!\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                
             }
         }
         else if (ch == '3') {
+
             Clear();
-            int idCom;
-            printf("Type the ID of the student you want to delete the information from : ");
-            scanf("%d", &idCom);
-            Student* ptr = student;
-            Student* rawStu = student;
-            int boolFind = 0;
-            for (int i = 0; ptr->next != NULL; i++) {
-                if (rawStu->id == idCom) {
-                    boolFind = 1;
-                    printf("Is this the right student information to delete ?\n------------------------------------\n");
-                    printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(rawStu->id), rawStu->name, rawStu->age, rawStu->major, rawStu->grade);
-                    printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
-                    ch = _getch();
-                    if (ch == 'Y' || ch == 'y') {
-                        student = student->next;
-                        arrSize--;
-                        break;
-                    }
+            if (student != NULL) {
+                int idCom;
+                printf("Type the ID of the student you want to delete the information from : ");
+                scanf("%d", &idCom);
+                Student* ptr = student;
+                Student* rawStu = student;
+                int boolFind = 0;
+                for (int i = 0; ptr->next != NULL; i++) {
+                    if (rawStu->id == idCom) {
+                        boolFind = 1;
+                        printf("Is this the right student information to delete ?\n------------------------------------\n");
+                        printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | GPA : %.2f\n", numToID(rawStu->id), rawStu->name, rawStu->age, rawStu->major, rawStu->grade);
+                        printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
+                        ch = _getch();
+                        if (ch == 'Y' || ch == 'y') {
+                            student = student->next;
+                            arrSize--;
+                            break;
+                        }
 
-                    else {
-                                                break;
+                        else {
+                            break;
+                        }
                     }
-                }
-                else if (ptr->next->id == idCom) {
-                    boolFind = 1;
-                    printf("Is this the right student information to delete ?\n------------------------------------\n");
-                    printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->next->id), ptr->next->name, ptr->next->age, ptr->next->major, ptr->next->grade);
-                    printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
-                    ch = _getch();
-                    if (ch == 'Y' || ch == 'y') {
-                        ptr->next = ptr->next->next;
-                        arrSize--;
-                        if(ptr->next != NULL) (ptr->next)->next = NULL;
-                        break;
-                    }
+                    else if (ptr->next->id == idCom) {
+                        boolFind = 1;
+                        printf("Is this the right student information to delete ?\n------------------------------------\n");
+                        printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->next->id), ptr->next->name, ptr->next->age, ptr->next->major, ptr->next->grade);
+                        printf("------------------------------------\nIf it is right, Press \"Y\" Key.");
+                        ch = _getch();
+                        if (ch == 'Y' || ch == 'y') {
+                            ptr->next = ptr->next->next;
+                            arrSize--;
+                            if (ptr->next != NULL) (ptr->next)->next = NULL;
+                            break;
+                        }
 
-                    else {
-                        
-                        break;
+                        else {
+
+                            break;
+                        }
                     }
+                    ptr = ptr->next;
                 }
-                ptr = ptr->next;
+                if (!boolFind) {
+                    printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+                    ch = _getch();
+
+                }
             }
-            if (!boolFind) {
-                printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+            else {
+                printf("No data exists to change!\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                
+            }
+        }
+        else if (ch == '5') {
+                Clear();
+            if (student != NULL) {
+                float avg = 0.0;
+                int count = 0;
+                Student* ptr = student;
+                printf("| ID  |    Name    |Age |   Major    | GPA  |\n");
+                for (int i = 0; ptr != NULL; i++) {
+                    avg += ptr->grade; count++;
+                    printf("| %-3s | %-10s | %2d | %-10s | %.2f |\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+                    ptr = ptr->next;
+                }
+
+                printf("\nAverage of student's grade : %.2f\nIf you want return to the menu, type any key.", (float)(avg / count));
+                ch = _getch();
+            }
+            else {
+                printf("No data exists to display!\nIf you want return to the menu, type any key.");
+                ch = _getch();
             }
         }
         else if (ch == '4') {
-            float avg = 0.0;
-            int count = 0;
             Clear();
-            Student* ptr = student;
-            printf("| ID  |    Name    |Age |   Major    | GPA  |\n");
-            for (int i = 0; ptr != NULL; i++) {
-                avg += ptr->grade; count++;
-                printf("| %-3s | %-10s | %2d | %-10s | %.2f |\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
-                ptr = ptr->next;
-            }
+            if (student != NULL) {
+                int idCom;
+                printf("Type the ID of the student you want to delete the information from : ");
+                scanf("%d", &idCom);
+                Student* ptr = student;
+                int boolFind = 0;
+                for (int i = 0; ptr != NULL; i++) {
+                    if (ptr->id == idCom) {
+                        boolFind = 1;
+                        printf("Search Result : \n------------------------------------\n");
+                        printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
+                        printf("------------------------------------\n\nIf you want return to the menu, type any key.");
+                        ch = _getch();
+                        break;
+                    }
 
-            printf("\nAverage of student's grade : %.2f\nIf you want return to the menu, type any key.", (float)(avg / count));
-            ch = _getch();
-        }
-        else if (ch == '5') {
-            Clear();
-            int idCom;
-            printf("Type the ID of the student you want to delete the information from : ");
-            scanf("%d", &idCom);
-            Student* ptr = student;
-            int boolFind = 0;
-            for (int i = 0; ptr != NULL; i++) {
-                if (ptr->id == idCom) {
-                    boolFind = 1;
-                    printf("Search Result : \n------------------------------------\n");
-                    printf("ID : %-3s | Name : %-15s | Age : %2d | Major : %-10s | Grade : %.2f\n", numToID(ptr->id), ptr->name, ptr->age, ptr->major, ptr->grade);
-                    printf("------------------------------------\n\nIf you want return to the menu, type any key.");
-                    ch = _getch();
-                    break;
+                    ptr = ptr->next;
                 }
-                   
-                ptr = ptr->next;
+                if (!boolFind) {
+                    printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+                    ch = _getch();
+
+                }
             }
-            if (!boolFind) {
-                printf("No students with that ID were found.\nIf you want return to the menu, type any key.");
+            else {
+        
+                printf("No data exists to search!\nIf you want return to the menu, type any key.");
                 ch = _getch();
                 
             }
