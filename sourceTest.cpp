@@ -77,7 +77,7 @@ char* numToID(int num) {
 
     return fstr;
 }
-void fileWrite(Student * studentpointer) {
+void fileWrite(Student* studentpointer) {
     FILE* outputF;
     outputF = fopen("student_output.txt", "w");
 
@@ -129,7 +129,7 @@ void sort(Student* st) {
         ptr = st;
         for (; ptr->next != NULL;) {
             if (ptr->grade > ptr->next->grade) {
-            //printf("oh");
+                //printf("oh");
                 int iid = ptr->id;
                 float ggrade = ptr->grade;
                 int aage = ptr->age;
@@ -150,20 +150,20 @@ void sort(Student* st) {
                 strcpy(ptr->next->name, nname);
                 strcpy(ptr->next->major, mmajor);
             }
-        ptr = ptr->next;
+            ptr = ptr->next;
         }
     }
 }
 int main() {
     //Student* student = (Student*)malloc(firstTest * sizeof(Student));
     int arrSize = 0;
-    
+
     FILE* input;
     FILE* output;
-    
+
     output = fopen("student_output.txt", "r+");
     if (output != NULL) {
-        
+
         input = fopen("student_output.txt", "r");
         if (input == NULL) {
             printf("Error: Could not open output file 'student_output.txt' for reading.\n");
@@ -172,14 +172,14 @@ int main() {
         }
     }
     else {
-        
+
         input = fopen("student_input.txt", "r");
         if (input == NULL) {
             printf("Error: Could not open input file 'student_input.txt'.\n");
             return 0;
         }
 
-        
+
         output = fopen("student_output.txt", "w");
         if (output == NULL) {
             printf("Error: Could not open or create output file 'student_output.txt'.\n");
@@ -199,18 +199,18 @@ int main() {
         if (fscanf(input, "%d,%99[^,],%d,%99[^,],%f\n", &id, name, &age, major, &grade) != EOF) {
             addStudent(&student, id, name, age, major, grade);
         }
-        else { 
+        else {
             break;
         }
         arrSize++;
     }
-        sort(student);
+    sort(student);
     Student* current = student;
     fclose(input);
     fclose(output);
     fileWrite(student);
     for (;;) {
-        
+
         Clear();
         Student* ptrww = student;
         for (int i = 0; ptrww != NULL; i++) {
@@ -223,18 +223,25 @@ int main() {
         if (ch == '1') {
             Clear();
             Student* tcurrent = student;
-            int idFin = 0;
+            //Student* front = student;
+            int idFin = -1621;
             if (tcurrent != NULL) { // NULLptr Test
+
                 while (tcurrent->next != NULL) {
-                    if (idFin < tcurrent->id) {
+                    
+                    if (idFin <= tcurrent->id) {
                         idFin = tcurrent->id;
                     }
-                    Student* temp = tcurrent;
+                    //Student* temp = tcurrent;
+
                     tcurrent = tcurrent->next;
                 }
             }
+            if (idFin <= tcurrent->id) {
+                idFin = tcurrent->id;
+            }
             //printf("idfinal : %d", idFin + 1);
-            Student temp = {(idFin + 1), "Chiara", 21, "CompSci", 4.5, NULL};
+            Student temp = { (idFin + 1), "Chiara", 21, "CompSci", 4.5, NULL };
             printf("Type the student's information.\nName : ");
             scanf("%s", temp.name);
             printf("Major : ");
@@ -360,7 +367,7 @@ int main() {
             }
         }
         else if (ch == '5') {
-                Clear();
+            Clear();
             if (student != NULL) {
                 float avg = 0.0;
                 int count = 0;
@@ -407,12 +414,12 @@ int main() {
                 }
             }
             else {
-        
+
                 printf("No data exists to search!\nIf you want return to the menu, type any key.");
                 ch = _getch();
-                
+
             }
-            
+
         }
         else {
             Clear();
